@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: air-draw-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: air-draw-api
+  template:
+    metadata:
+      labels:
+        app: air-draw-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/example/air-draw-api:latest
+          ports:
+            - containerPort: 4000
+

@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model SketchSession {
+  id        String   @id @default(cuid())
+  prompt    String?
+  label     String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+}
+

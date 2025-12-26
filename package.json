@@ -1,0 +1,17 @@
+{
+  "name": "air-draw",
+  "private": true,
+  "version": "0.0.1",
+  "packageManager": "pnpm@9.0.0",
+  "workspaces": [
+    "apps/web",
+    "services/ai-api"
+  ],
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter ai-api dev",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  }
+}
+

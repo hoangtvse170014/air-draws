@@ -1,0 +1,21 @@
+version: '3.10'
+
+services:
+  web:
+    build: ../apps/web
+    command: pnpm dev
+    ports:
+      - '5173:5173'
+    volumes:
+      - ../apps/web:/app
+
+  api:
+    build: ../services/ai-api
+    command: pnpm dev
+    environment:
+      - PORT=4000
+    ports:
+      - '4000:4000'
+    volumes:
+      - ../services/ai-api:/app
+
