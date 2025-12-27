@@ -2,8 +2,13 @@ import { VectorPoint } from '../hooks/useDrawBuffer';
 
 /**
  * Simple moving-average smoother to keep the stub deterministic.
+ * Increased window size for better stability.
  */
-export const smoothPath = (points: VectorPoint[], windowSize = 4): VectorPoint[] => {
+export const smoothPath = (points: VectorPoint[], windowSize = 8): VectorPoint[] => {
+  if (points.length === 0) {
+    return points;
+  }
+  
   if (points.length <= windowSize) {
     return points;
   }

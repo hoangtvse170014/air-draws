@@ -17,33 +17,52 @@ const App = () => {
   const lastGestureRef = useRef(handTracking.sample?.gesture ?? null);
 
   const handleGenerate = useCallback(async () => {
-    if (!path.length || status === 'generating') {
+    console.log('[App] Generate clicked, path length:', path.length, 'status:', status);
+    if (!path.length) {
+      console.warn('[App] Cannot generate: path is empty');
+      setError('Please draw something first before generating.');
+      return;
+    }
+    if (status === 'generating') {
+      console.warn('[App] Already generating, ignoring click');
       return;
     }
 
     try {
       setStatus('generating');
       setError(null);
+      console.log('[App] Starting generation, path length:', path.length);
       const sketch = await pathToSketchBlob(path);
+      console.log('[App] Sketch created, size:', sketch.size, 'bytes');
       const response = await generateFromSketch({ sketch });
+      console.log('[App] Generation complete, imageUrl:', response.imageUrl?.substring(0, 100));
+      
+      // Check if we got a placeholder
+      if (response.imageUrl?.includes('placehold.co')) {
+        setError('API returned placeholder. Check if API key is configured correctly in the server.');
+      }
+      
       setResultImage(response.imageUrl);
       setStatus('done');
       clear();
     } catch (err) {
       console.error('[App] generation failed', err);
-      setError(err instanceof Error ? err.message : 'Generation failed');
+      const errorMessage = err instanceof Error ? err.message : 'Generation failed';
+      setError(errorMessage);
       setStatus('idle');
     }
   }, [path, status, clear]);
 
   useEffect(() => {
     const currentGesture = handTracking.sample?.gesture ?? null;
+    // When fist gesture is detected and we have a path, generate image
     if (
       currentGesture === 'fist' &&
       lastGestureRef.current !== 'fist' &&
-      path.length &&
+      path.length > 0 &&
       status !== 'generating'
     ) {
+      console.log('[App] Fist gesture detected, generating image...');
       void handleGenerate();
     }
     lastGestureRef.current = currentGesture;
@@ -93,6 +112,7 @@ const App = () => {
             }}
             resultImage={resultImage}
             error={error}
+            hasPath={path.length > 0}
           />
         </aside>
       </main>

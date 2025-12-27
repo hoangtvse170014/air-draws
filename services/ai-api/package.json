@@ -10,8 +10,9 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "form-data": "^4.0.0",
+    "dotenv": "^17.2.3",
     "express": "^4.19.2",
+    "form-data": "^4.0.0",
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^2.7.0"
   },
@@ -24,4 +25,3 @@
     "typescript": "^5.5.4"
   }
 }
-

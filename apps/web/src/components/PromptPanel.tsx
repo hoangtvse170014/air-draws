@@ -4,6 +4,7 @@ interface PromptPanelProps {
   onClear: () => void;
   resultImage?: string | null;
   error?: string | null;
+  hasPath?: boolean;
 }
 
 const statusMessage: Record<PromptPanelProps['status'], string> = {
@@ -18,11 +19,19 @@ const PromptPanel = ({
   onClear,
   resultImage,
   error,
+  hasPath = false,
 }: PromptPanelProps) => {
+  const canGenerate = hasPath && status !== 'generating';
+  
   return (
     <section className="card">
       <h2>Prompt Panel</h2>
       <p>{statusMessage[status]}</p>
+      {!hasPath && status === 'idle' && (
+        <p style={{ color: '#666', fontSize: '0.9rem' }}>
+          💡 Draw something on the canvas first
+        </p>
+      )}
       <div className="prompt-actions">
         <button type="button" className="secondary" onClick={onClear}>
           Clear
@@ -31,7 +40,11 @@ const PromptPanel = ({
           type="button"
           className="primary"
           onClick={onGenerate}
-          disabled={status === 'generating'}
+          disabled={!canGenerate}
+          style={{
+            opacity: canGenerate ? 1 : 0.5,
+            cursor: canGenerate ? 'pointer' : 'not-allowed',
+          }}
         >
           {status === 'generating' ? 'Working…' : 'Generate'}
         </button>
